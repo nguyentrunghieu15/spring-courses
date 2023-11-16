@@ -11,6 +11,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,7 +22,7 @@ public class FundamentalHttpsRequest {
 
 	public static String url = "https://jsonplaceholder.typicode.com/albums";
 
-	public String callHttpRequestByBRLConnection(String url) {
+	public static String callHttpRequestByBRLConnection(String url) {
 		String res = "";
 		try {
 			URL urlObject = new URL(url);
@@ -39,7 +41,7 @@ public class FundamentalHttpsRequest {
 		return res;
 	}
 
-	public String callHttpRequestByHttpClient(String url) {
+	public static String callHttpRequestByHttpClient(String url) {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 		String res = "";
@@ -53,12 +55,28 @@ public class FundamentalHttpsRequest {
 		return res;
 	}
 
-	public Object parseToJSON(String value) {
+	public static Object parseToJSON(String value) {
 		return JSONValue.parse(value);
+	}
+
+	public static List<Album> createListAlbum(Object data) {
+		List<Album> albums = new ArrayList<Album>();
+		((JSONArray) data).stream().forEach(e -> {
+			JSONObject item = (JSONObject) e;
+			albums.add(Album.createBuilder().id(Integer.parseInt(item.get("id").toString()))
+					.userId(Integer.parseInt(item.get("userId").toString())).title(item.get("title").toString())
+					.build());
+		});
+		return albums;
+
 	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		String data = FundamentalHttpsRequest.callHttpRequestByBRLConnection(FundamentalHttpsRequest.url);
+		JSONArray jsonData = (JSONArray) FundamentalHttpsRequest.parseToJSON(data);
+		List<Album> albums = FundamentalHttpsRequest.createListAlbum(jsonData);
+		System.out.println("Quantity album:" + albums.size());
 		return;
 	}
 
