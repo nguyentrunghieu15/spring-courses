@@ -22,7 +22,7 @@ public class Album {
 		this.title = title;
 	}
 
-	private class Builder {
+	public static class Builder {
 		private int Id = 0;
 		private int userId = 0;
 		private String title = "";
@@ -31,16 +31,19 @@ public class Album {
 			super();
 		}
 
-		public void setId(int Id) {
+		public Builder id(int Id) {
 			this.Id = Id;
+			return this;
 		}
 
-		public void setUserId(int userId) {
+		public Builder userId(int userId) {
 			this.userId = userId;
+			return this;
 		}
 
-		public void setTitle(String title) {
+		public Builder title(String title) {
 			this.title = title;
+			return this;
 		}
 
 		public Album build() {
@@ -49,7 +52,7 @@ public class Album {
 
 	}
 
-	public Builder createBuilder() {
+	public static Builder createBuilder() {
 		return new Builder();
 	}
 }
